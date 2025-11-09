@@ -1,0 +1,44 @@
+name: Multi-Platform Matrix Build (f6853b2)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    # Matrix Strategy: Node versions across multiple OS platforms
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [14, 16, 18]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Step Identifier (required)
+      - name: matrix-f6853b2
+        run: echo "Building for Node ${{ matrix.node-version }} on ${{ matrix.os }}"
+
+      # Generate Build Artifact
+      - name: Generate build artifact
+        run: |
+          echo "Build output for Node version ${{ matrix.node-version }} on ${{ matrix.os }}" > build_output.txt
+          echo "Timestamp: $(date)" >> build_output.txt
+          echo "Repository: $GITHUB_REPOSITORY" >> build_output.txt
+          echo "Job: ${{ github.job }}" >> build_output.txt
+          cat build_output.txt
+
+      # Upload Artifact (unique name per variant)
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-f6853b2-${{ matrix.os }}-v${{ matrix.node-version }}
+          path: build_output.txt
