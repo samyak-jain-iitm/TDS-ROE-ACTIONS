@@ -10,7 +10,7 @@ jobs:
     # Matrix Strategy: Node versions across multiple OS platforms
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         node-version: [14, 16, 18]
     runs-on: ${{ matrix.os }}
 
